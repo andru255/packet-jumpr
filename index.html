@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="EN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jump little packet!</title>
+    <style type="text/css">
+      body {
+        text-align: center;
+        background-color: #281e5d;
+        color: #fff;
+      }
+      canvas {
+        border: 10px solid #bbb;
+        background-color: #240642;
+        display: inline-block;
+      }
+      a { display: block;}
+    </style>
+  </head>
+  <body>
+    <canvas id="c" width="800" height="600"></canvas>
+    <script src="bundle.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        JLP.default();
+      });
+    </script>
+</html>

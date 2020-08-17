@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es5",
+    "sourceMap": true,
+    "outDir": "./lib/",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types", "./typings"],
+    "baseUrl": ".",
+    "paths": {
+      "@abstract/*": ["src/abstract/*"],
+      "@toolbox/*": ["src/toolbox/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
