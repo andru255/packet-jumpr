@@ -26,7 +26,7 @@ export class Game extends GameEngine {
       dt: this.step,
       canvas: this.canvas,
       ctx: this.ctx,
-      name: "PONGV2",
+      name: "RUN LITTLE PACKET!!",
       layers: this.layers.getLayers(),
       start: this.start,
       stop: () => this.stop(),

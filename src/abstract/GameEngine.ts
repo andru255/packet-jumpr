@@ -1,12 +1,8 @@
 import Layer from "@abstract/Layer";
 import { LayerStack } from "../LayerStack";
 
-enum LoopStatus {
-  Stopped,
-  Started,
-}
 export default abstract class GameEngine {
-  loopStatus: LoopStatus = LoopStatus.Stopped;
+  isStopped: boolean = false;
   animationLoop: number;
   drawFrame;
   layers: LayerStack;
@@ -27,7 +23,7 @@ export default abstract class GameEngine {
   init(): void {}
 
   start(): void {
-    this.loopStatus = LoopStatus.Started;
+    this.isStopped = false;
 
     this.layers.startOnce(this.getFeatures()).then(() => {
       this.init();
@@ -50,7 +46,7 @@ export default abstract class GameEngine {
       }
     };
 
-    if (this.loopStatus == LoopStatus.Started) {
+    if (!this.isStopped) {
       this.drawFrame();
     }
   }
@@ -65,7 +61,7 @@ export default abstract class GameEngine {
   }
 
   stop() {
-    this.loopStatus = LoopStatus.Stopped;
+    this.isStopped = true;
     window.cancelAnimationFrame(this.animationLoop);
   }
 

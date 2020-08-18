@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es5",
+    "module": "ES2015",
+    //"moduleResolution": "node",
+    "target": "ES2015",
     "sourceMap": true,
-    "outDir": "./lib/",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
+    "lib": ["ES2015", "DOM"],
     "typeRoots": ["./node_modules/@types", "./typings"],
     "baseUrl": ".",
+    "rootDir": "./src/",
     "paths": {
       "@abstract/*": ["src/abstract/*"],
       "@toolbox/*": ["src/toolbox/*"]

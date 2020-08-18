@@ -1,13 +1,15 @@
 import { Game } from "./Game";
+import box from "./Layers/Box";
+
 const game = new Game("c");
 const setup = () => {
-  console.log("setup game!");
+  console.log(game.getFeatures().name);
   // Actors
+  game.add("box", box);
   // HUD
   // prompts
-
   // initial state
-  game.stop();
+  //game.stop();
 };
 const JLP = () => {
   setup();
