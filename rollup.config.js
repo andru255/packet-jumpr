@@ -19,7 +19,7 @@ export default {
     resolve(),
     typescript(),
     commonjs(),
-    //terser(),
+    !isDev && terser(),
     isDev && serve(),
     isDev && reload(),
   ],
