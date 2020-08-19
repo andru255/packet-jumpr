@@ -3,9 +3,6 @@ import { GameFeatures } from "src/Game";
 import { rectangleFixture } from "@toolbox/Fixture";
 
 class LayerBox extends Layer {
-  gravity = 100;
-  friction = 0.1;
-
   start(gameFeatures: GameFeatures): void {
     this.width = 50;
     this.height = 50;
@@ -14,11 +11,12 @@ class LayerBox extends Layer {
     this.strokeStyle = "#000";
     this.x = 20;
     this.y = 20;
+    this.accY = 100;
+    this.bounce = -1;
   }
 
   update(gameFeatures: GameFeatures): void {
-    let wall = <Layer>gameFeatures.layers["wall"];
-    this.vy += gameFeatures.dt * this.gravity;
+    this.vy += gameFeatures.dt * this.accY;
     this.y = this.vy;
   }
 
