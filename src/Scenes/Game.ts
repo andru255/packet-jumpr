@@ -21,8 +21,9 @@ class GameScene extends Layer {
     if (box.y <= 100) {
       box.accY = 100;
     }
-    if (box.collideWith(bricks)) {
-      box.y = bricks.y;
+    var brickTouched = bricks.collidesWithBrick(box);
+    if (brickTouched) {
+      box.y = brickTouched.y;
       box.accY *= box.bounce;
     }
 
