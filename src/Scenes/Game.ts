@@ -1,15 +1,20 @@
 import Layer from "@abstract/Layer";
 import { GameFeatures } from "src/Game";
-import box from "src/Layers/Box";
-import bricks from "src/Layers/Bricks";
+import LayerBox from "src/Layers/Box";
+import LayerBricks from "src/Layers/Bricks";
 import EventHandler from "@toolbox/EventHandler";
+import { Random } from "@toolbox/Math";
 
 class GameScene extends Layer {
   private isPressed: boolean = false;
   private evtHandler = new EventHandler();
+
+  private box: LayerBox = new LayerBox();
+  private bricks: LayerBricks = new LayerBricks();
+
   start(gameFeatures: GameFeatures): void {
-    box.start(gameFeatures);
-    bricks.start(gameFeatures);
+    this.box.start(gameFeatures);
+    this.bricks.start(gameFeatures);
     this.evtHandler.on(gameFeatures.canvas, "mousedown", () => {
       this.isPressed = true;
     });
@@ -18,26 +23,40 @@ class GameScene extends Layer {
     });
   }
   update(gameFeatures: GameFeatures): void {
-    if (box.y <= 100) {
-      box.accY = 100;
-    }
-    var brickTouched = bricks.collidesWithBrick(box);
-    if (brickTouched) {
-      box.y = brickTouched.y;
-      box.accY *= box.bounce;
+    this.box.accY -= Math.sin(30) * 25;
+
+    if (this.box.y > gameFeatures.canvas.height) {
+      this.restart(gameFeatures);
     }
 
-    bricks.vx = 0;
+    if (!this.isPressed) {
+      this.bricks.vx = 0;
+      this.bounceBox();
+    }
+
     if (this.isPressed) {
-      bricks.vx -= 1;
+      this.bricks.vx = -10;
     }
 
-    box.update(gameFeatures);
-    bricks.update(gameFeatures);
+    this.box.update(gameFeatures);
+    this.bricks.update(gameFeatures);
   }
   render(gameFeatures: GameFeatures): void {
-    box.render(gameFeatures);
-    bricks.render(gameFeatures);
+    this.box.render(gameFeatures);
+    this.bricks.render(gameFeatures);
+  }
+
+  private bounceBox() {
+    let brickTouched = this.bricks.collidesWithBrick(this.box);
+    if (brickTouched) {
+      this.box.y = brickTouched.y - brickTouched.height - this.box.height;
+      this.box.vy *= this.box.bounce;
+    }
+  }
+  private restart(gameFeatures: GameFeatures) {
+    this.box = new LayerBox();
+    this.bricks = new LayerBricks();
+    this.start(gameFeatures);
   }
 }
 
