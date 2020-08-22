@@ -23,23 +23,21 @@ class GameScene extends Layer {
     });
   }
   update(gameFeatures: GameFeatures): void {
-    this.box.accY -= Math.sin(30) * 25;
-
+    this.box.update(gameFeatures);
+    this.bricks.update(gameFeatures);
     if (this.box.y > gameFeatures.canvas.height) {
       this.restart(gameFeatures);
     }
 
     if (!this.isPressed) {
+      this.box.accY -= Math.sin(30) * 10;
       this.bricks.vx = 0;
-      this.bounceBox();
     }
 
     if (this.isPressed) {
-      this.bricks.vx = -10;
+      this.bricks.vx = -15;
     }
-
-    this.box.update(gameFeatures);
-    this.bricks.update(gameFeatures);
+    this.bounceBox();
   }
   render(gameFeatures: GameFeatures): void {
     this.box.render(gameFeatures);
@@ -49,7 +47,7 @@ class GameScene extends Layer {
   private bounceBox() {
     let brickTouched = this.bricks.collidesWithBrick(this.box);
     if (brickTouched) {
-      this.box.y = brickTouched.y - brickTouched.height - this.box.height;
+      this.box.y = brickTouched.y - (this.box.height + this.box.lineWidth);
       this.box.vy *= this.box.bounce;
     }
   }

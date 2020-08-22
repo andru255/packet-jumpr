@@ -2,27 +2,28 @@ import Layer from "@abstract/Layer";
 import { GameFeatures } from "src/Game";
 import { Random } from "@toolbox/Math";
 import LayerBrick from "./Brick";
+import { rectangleFixture } from "@toolbox/Fixture";
 
 export default class LayerBricks extends Layer {
   private bricks: LayerBrick[] = [];
-  private numBricks = 7;
+  private numBricks = 4;
 
   start(gameFeatures: GameFeatures): void {
     this.width = gameFeatures.canvas.width;
-    this.height = gameFeatures.canvas.height / 2;
+    this.height = gameFeatures.canvas.height / 2 + 10;
     this.x = 20;
     this.y = gameFeatures.canvas.height - this.height;
-    this.generateBricks();
+    this.lineWidth = 1;
+    this.generateBricks(gameFeatures);
   }
   update(gameFeatures: GameFeatures): void {
     this.x += this.vx;
-
     this.bricks.forEach((brick, index) => {
       brick.vx = this.vx;
       brick.x += brick.vx;
       if (brick.x + brick.width <= 0) {
         this.bricks.splice(index, 1);
-        this.appendBrick(this.bricks[this.bricks.length - 1]);
+        this.appendBrick(gameFeatures, this.bricks[this.bricks.length - 1]);
       }
     });
   }
@@ -36,33 +37,32 @@ export default class LayerBricks extends Layer {
     return this.bricks.find((brick) => brick.collideWith(box) === true);
   }
 
-  private generateBricks() {
+  private generateBricks(gameFeatures) {
     for (let i = 0; i < this.numBricks; i++) {
-      let brick = new LayerBrick();
-      if (i == 0) {
-        brick.x = 20;
-      }
-      brick.y = Random.fromArray([this.y, this.height]);
-      brick.width = Random.fromArray([40, 60]);
+      var brick = this.getNewBrick(gameFeatures);
+      brick.x = 20;
       if (this.bricks.length > 0) {
         let lastBrick = this.bricks[i - 1];
-        if (brick.y == lastBrick.y) {
-          brick.y = Random.fromArray([brick.y, this.height]);
-        }
-        brick.x = lastBrick.x + lastBrick.width + Random.fromArray([250, 350]);
+        brick = this.getNewBrick(gameFeatures, lastBrick);
       }
       this.bricks.push(brick);
     }
   }
 
-  private appendBrick(lastBrick: Layer) {
+  private appendBrick(gameFeatures: GameFeatures, lastBrick: Layer) {
+    this.bricks.push(this.getNewBrick(gameFeatures, lastBrick));
+  }
+
+  private getNewBrick(
+    gameFeatures: GameFeatures,
+    lastBrick?: Layer
+  ): LayerBrick {
     let brick = new LayerBrick();
     brick.width = Random.fromArray([40, 60]);
-    brick.y = Random.fromArray([lastBrick.y, this.height]);
-    if (brick.y == lastBrick.y) {
-      brick.y = Random.fromArray([lastBrick.y, this.height]);
+    brick.y = (gameFeatures.canvas.height * 3) / 4 + Random.int(-100, 100);
+    if (lastBrick) {
+      brick.x = lastBrick.x + lastBrick.width + Random.int(200, 280);
     }
-    brick.x = lastBrick.x + lastBrick.width + Random.fromArray([250, 350]);
-    this.bricks.push(brick);
+    return brick;
   }
 }

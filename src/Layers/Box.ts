@@ -3,7 +3,8 @@ import { GameFeatures } from "src/Game";
 import { rectangleFixture } from "@toolbox/Fixture";
 
 export default class LayerBox extends Layer {
-  maxAccY = 25;
+  maxAccY = 30;
+  maxVY = -15;
 
   start(gameFeatures: GameFeatures): void {
     this.width = 30;
@@ -20,6 +21,9 @@ export default class LayerBox extends Layer {
   update(gameFeatures: GameFeatures): void {
     if (this.accY > this.maxAccY) {
       this.accY = this.maxAccY;
+    }
+    if (this.vy < this.maxVY) {
+      this.vy = this.maxVY;
     }
     this.vy += gameFeatures.dt * this.accY;
     this.y += this.vy;
