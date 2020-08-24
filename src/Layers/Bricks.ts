@@ -19,7 +19,7 @@ export default class LayerBricks extends Layer {
   update(gameFeatures: GameFeatures): void {
     this.x += this.vx;
     this.bricks.forEach((brick, index) => {
-      brick.vx = this.vx;
+      brick.vx = gameFeatures.dt * this.vx;
       brick.x += brick.vx;
       if (brick.x + brick.width <= 0) {
         this.bricks.splice(index, 1);

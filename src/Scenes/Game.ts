@@ -3,7 +3,7 @@ import { GameFeatures } from "src/Game";
 import LayerBox from "src/Layers/Box";
 import LayerBricks from "src/Layers/Bricks";
 import EventHandler from "@toolbox/EventHandler";
-import { Random } from "@toolbox/Math";
+import { KeyName } from "@toolbox/Keyboard";
 
 class GameScene extends Layer {
   private isPressed: boolean = false;
@@ -21,6 +21,11 @@ class GameScene extends Layer {
     this.evtHandler.on(gameFeatures.canvas, "mouseup", () => {
       this.isPressed = false;
     });
+    this.evtHandler.on(window.document, "keyup", (evt) => {
+      if (KeyName.ESC == evt.keyCode) {
+        this.toggle();
+      }
+    });
   }
   update(gameFeatures: GameFeatures): void {
     this.box.update(gameFeatures);
@@ -35,11 +40,14 @@ class GameScene extends Layer {
     }
 
     if (this.isPressed) {
-      this.bricks.vx = -15;
+      this.bricks.vx = -900;
     }
     this.bounceBox();
   }
   render(gameFeatures: GameFeatures): void {
+    if (this.isHidden) {
+      return;
+    }
     this.box.render(gameFeatures);
     this.bricks.render(gameFeatures);
   }

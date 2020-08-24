@@ -30,6 +30,8 @@ export default abstract class Layer {
 
   //data shared
   shared?: any = {};
+  // visibility
+  isHidden: boolean = false;
 
   abstract start?(gameFeatures: GameFeatures): void;
   abstract update?(gameFeatures: GameFeatures): void;
@@ -41,5 +43,13 @@ export default abstract class Layer {
     const top = this.y + this.height < layer.y;
     const bottom = this.y > layer.y + layer.height;
     return !(left || right || top || bottom);
+  }
+
+  toggle?(): void {
+    if (this.isHidden) {
+      this.isHidden = false;
+      return;
+    }
+    this.isHidden = true;
   }
 }

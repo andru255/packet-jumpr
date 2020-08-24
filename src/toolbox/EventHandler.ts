@@ -3,7 +3,7 @@ export default class EventHandler {
   pattern: RegExp = /([a-z]+)\.?(.*)?/;
   private isUndefined = (value) => value === undefined;
 
-  on(target: EventTarget, name: string, event: () => void) {
+  on(target: EventTarget, name: string, event: (evt?) => void) {
     const match = name.match(this.pattern);
     if (!this.isUndefined(match)) {
       this.events[name] = function (evt) {
