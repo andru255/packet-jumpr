@@ -6,12 +6,12 @@ import { KeyName } from "@toolbox/Keyboard";
 
 class WelcomeScene extends Layer {
   startBtn = new LayerButton();
-  statsBtn = new LayerButton();
   isHidden = false;
 
   start(gameFeatures: GameFeatures): void {
     this.width = gameFeatures.canvas.width;
     this.height = gameFeatures.canvas.height;
+    this.fillStyle = "#ffffffcc";
     // start button
     this.startBtn.fillStyle = "#f00";
     this.startBtn.width = 320;
@@ -21,7 +21,7 @@ class WelcomeScene extends Layer {
     this.startBtn.label.y = 40 + this.startBtn.y;
     this.startBtn.label.x = 5 + this.startBtn.x;
     this.startBtn.label.fillStyle = "#000";
-    this.startBtn.label.font = "40px arial, sans-serif";
+    this.startBtn.label.font = "30px arial, sans-serif";
     this.startBtn.label.text = "START [ENTER]";
     this.startBtn
       .on("click", () => this.toggle())
@@ -34,8 +34,10 @@ class WelcomeScene extends Layer {
   }
   update(gameFeatures: GameFeatures): void {
     if (this.isHidden) {
-      this.startBtn.hide();
+      this.startBtn.hide(gameFeatures.canvas);
+      return;
     }
+    this.startBtn.show(gameFeatures.canvas);
   }
   render(gameFeatures: GameFeatures): void {
     if (this.isHidden) {

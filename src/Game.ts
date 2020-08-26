@@ -1,4 +1,3 @@
-import { LayerStack } from "./LayerStack";
 import Layer from "@abstract/Layer";
 
 export interface GameFeatures {
@@ -6,14 +5,16 @@ export interface GameFeatures {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   name: string;
+  on: () => void;
+  off: () => void;
 }
 export class Game {
-  isStopped: boolean = false;
-  animationLoop: number;
-  drawFrame;
-  layers: LayerStack;
+  isOff: boolean = false;
+  animLoop: number;
+  draw = () => {};
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  l: Layer; // main layer
   //animation vars
   accumulator: number = 0;
   delta: number = 1e3 / 60;
@@ -22,31 +23,17 @@ export class Game {
   now: number;
   dt: number = 0;
 
-  constructor(canvasId) {
+  constructor(canvasId: string, l: Layer) {
     this.canvas = <HTMLCanvasElement>document.getElementById(canvasId);
     this.ctx = this.canvas.getContext("2d");
-    this.layers = new LayerStack();
+    this.l = l;
   }
 
-  init() {}
+  setup() {
+    this.l.start(this.getFeatures());
 
-  getFeatures(): GameFeatures {
-    return {
-      dt: this.step,
-      canvas: this.canvas,
-      ctx: this.ctx,
-      name: "RUN LITTLE PACKET!!",
-    };
-  }
-
-  start(): void {
-    this.isStopped = false;
-    this.layers.startOnce(this.getFeatures()).then(() => {
-      this.init();
-    });
-
-    this.drawFrame = () => {
-      this.animationLoop = window.requestAnimationFrame(this.drawFrame);
+    this.draw = () => {
+      this.animLoop = window.requestAnimationFrame(this.draw);
       this.now = performance.now();
       this.dt = this.now - this.last;
       this.last = this.now;
@@ -55,24 +42,34 @@ export class Game {
       }
       this.accumulator += this.dt;
       while (this.accumulator >= this.delta) {
-        this.layers.runLayersWithMethod("update", this.getFeatures());
+        this.l.update(this.getFeatures());
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.layers.runLayersWithMethod("render", this.getFeatures());
+        this.l.render(this.getFeatures());
         this.accumulator -= this.delta;
       }
     };
+  }
 
-    if (!this.isStopped) {
-      this.drawFrame();
+  getFeatures(): GameFeatures {
+    return {
+      dt: this.step,
+      canvas: this.canvas,
+      ctx: this.ctx,
+      name: "RUN LITTLE PACKET!!",
+      on: () => this.on(),
+      off: () => this.off(),
+    };
+  }
+
+  on(): void {
+    if (this.isOff) {
+      this.isOff = false;
     }
+    this.draw();
   }
 
-  add(name: string, layer: Layer) {
-    this.layers.addLayer(name, layer);
-  }
-
-  stop() {
-    this.isStopped = true;
-    window.cancelAnimationFrame(this.animationLoop);
+  off() {
+    this.isOff = true;
+    window.cancelAnimationFrame(this.animLoop);
   }
 }

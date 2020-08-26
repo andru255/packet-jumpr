@@ -3,6 +3,7 @@ import Layer from "@abstract/Layer";
 export function rectangleFixture(layer: Layer, gf: any) {
   const ctx = <CanvasRenderingContext2D>gf.ctx;
   ctx.save();
+  ctx.filter = layer.filter;
   ctx.fillStyle = layer.fillStyle;
   ctx.translate(layer.x, layer.y);
   ctx.rotate(layer.rotation);

@@ -9,6 +9,7 @@ export default abstract class Layer {
   height: number = 0;
   radius?: number = 0;
   // styling
+  filter?: string;
   fillStyle?: string | CanvasGradient = "#0f0";
   strokeStyle?: string = "#00f";
   lineWidth?: number = 0;

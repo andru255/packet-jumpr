@@ -28,12 +28,12 @@ export default class LayerButton extends Layer {
     textFixture(this.label, gameFeatures);
   }
 
-  hide() {
+  hide(canvas: HTMLCanvasElement) {
     if (this.isHidden) {
       return;
     }
     this.isHidden = true;
-    this.unsubscribe();
+    this.unsubscribe(canvas);
     return this;
   }
 
@@ -70,7 +70,9 @@ export default class LayerButton extends Layer {
     };
     eventList[`mousemove.${this.id}`] = function (evt) {
       const mousePos = getMousePosition(canvas, evt);
+      canvas.classList.remove("cursor");
       if (isRectInsideOther(mousePos, _this)) {
+        canvas.classList.add("cursor");
         _this.triggerEvent("mouseinside", this, [evt]);
       }
     };
@@ -83,11 +85,12 @@ export default class LayerButton extends Layer {
     }
   }
 
-  private unsubscribe() {
+  private unsubscribe(canvas: HTMLCanvasElement) {
     const names = ["mousedown", "mouseup", "click", "mousemove", "keydown"];
     names.forEach((name) => {
       this.eventHandler.off(document, `${name}.${this.id}`);
     });
+    canvas.classList.remove("cursor");
   }
   private triggerEvent(name: string, context: any, params: any[]) {
     if (this.events[name] === undefined) {
