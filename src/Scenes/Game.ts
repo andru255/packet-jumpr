@@ -3,24 +3,29 @@ import { GameFeatures } from "src/Game";
 import LayerBox from "src/Layers/Box";
 import LayerBricks from "src/Layers/Bricks";
 import EventHandler from "@toolbox/EventHandler";
-class GameScene extends Layer {
+export default class GameScene extends Layer {
   private isPressed: boolean = false;
   private evtHandler = new EventHandler();
   private box: LayerBox = new LayerBox();
   private bricks: LayerBricks = new LayerBricks();
   public isOff: boolean = false;
+  public isOut: boolean = false;
 
   start(gameFeatures: GameFeatures): void {
     this.box.start(gameFeatures);
     this.bricks.start(gameFeatures);
-    this.on(gameFeatures.canvas);
+    this.off(gameFeatures.canvas);
   }
 
   update(gameFeatures: GameFeatures): void {
+    if (this.isOff) {
+      return;
+    }
     this.box.update(gameFeatures);
     this.bricks.update(gameFeatures);
     if (this.box.y > gameFeatures.canvas.height) {
-      this.restart(gameFeatures);
+      this.isOut = true;
+      //this.restart(gameFeatures);
     }
 
     if (!this.isPressed) {
@@ -35,7 +40,7 @@ class GameScene extends Layer {
   }
 
   render(gameFeatures: GameFeatures): void {
-    if (this.isHidden) {
+    if (this.isHidden || this.isOff || this.isOut) {
       return;
     }
     this.box.render(gameFeatures);
@@ -45,13 +50,21 @@ class GameScene extends Layer {
   pause(gameFeatures: GameFeatures) {
     this.isOff = true;
     this.off(gameFeatures.canvas);
-    gameFeatures.off();
+    //gameFeatures.off();
   }
 
   resume(gameFeatures: GameFeatures) {
     this.isOff = false;
     this.on(gameFeatures.canvas);
     gameFeatures.on();
+  }
+
+  restart(gameFeatures: GameFeatures) {
+    this.box = new LayerBox();
+    this.bricks = new LayerBricks();
+    this.isOut = false;
+    this.start(gameFeatures);
+    this.on(gameFeatures.canvas);
   }
 
   private on(canvas: HTMLCanvasElement) {
@@ -75,12 +88,4 @@ class GameScene extends Layer {
       this.box.vy *= this.box.bounce;
     }
   }
-
-  private restart(gameFeatures: GameFeatures) {
-    this.box = new LayerBox();
-    this.bricks = new LayerBricks();
-    this.start(gameFeatures);
-  }
 }
-
-export default new GameScene();

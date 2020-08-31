@@ -1,34 +1,42 @@
 import { Game, GameFeatures } from "./Game";
-import gameScene from "./Scenes/Game";
-import welcomeScene from "./Scenes/Welcome";
+import menuScene from "./Scenes/Menu";
 import Layer from "@abstract/Layer";
 import { KeyName } from "@toolbox/Keyboard";
 import EventHandler from "@toolbox/EventHandler";
+import GameScene from "./Scenes/Game";
 
 class MainLayer extends Layer {
   private evtHandler = new EventHandler();
+  private gs = new GameScene();
   start(gameFeatures: GameFeatures): void {
-    gameScene.start(gameFeatures);
-    welcomeScene.start(gameFeatures);
-    gameScene.pause(gameFeatures);
-
+    this.gs.start(gameFeatures);
+    menuScene.start(gameFeatures);
+    menuScene.show("welcome");
     this.evtHandler.on(window.document, "keyup", (evt) => {
       if (KeyName.ESC == evt.keyCode) {
-        if (gameScene.isOff) {
-          gameScene.resume(gameFeatures);
+        if (this.gs.isOff) {
+          this.gs.resume(gameFeatures);
+          menuScene.clear();
+          console.log("clearrr!!");
           return;
         }
-        gameScene.pause(gameFeatures);
+        console.log("pause!!");
+        menuScene.show("pause");
+        this.gs.pause(gameFeatures);
       }
     });
   }
   update(gameFeatures: GameFeatures): void {
-    gameScene.update(gameFeatures);
-    welcomeScene.update(gameFeatures);
+    if (this.gs.isOut) {
+      menuScene.show("lose");
+      //this.gs.restart(gameFeatures);
+    }
+    this.gs.update(gameFeatures);
+    menuScene.update(gameFeatures);
   }
   render(gameFeatures: GameFeatures): void {
-    gameScene.render(gameFeatures);
-    welcomeScene.render(gameFeatures);
+    this.gs.render(gameFeatures);
+    menuScene.render(gameFeatures);
   }
 }
 
