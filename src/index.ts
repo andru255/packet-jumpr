@@ -10,26 +10,43 @@ class MainLayer extends Layer {
   private gs = new GameScene();
   start(gameFeatures: GameFeatures): void {
     this.gs.start(gameFeatures);
+    //menu events
+    //welcome
+    menuScene.cbs["c00"] = () => {
+      menuScene.clear();
+      this.gs.resume(gameFeatures);
+    };
+    // restart && continue
+    menuScene.cbs["ku00"] = menuScene.cbs["c00"];
+    menuScene.cbs["c10"] = () => {
+      menuScene.clear();
+      this.gs.restart(gameFeatures);
+    };
+    menuScene.cbs["ku10"] = menuScene.cbs["c10"];
+    menuScene.cbs["c11"] = menuScene.cbs["c00"];
+    // start again
+    menuScene.cbs["c20"] = menuScene.cbs["c10"];
+    menuScene.cbs["ku20"] = menuScene.cbs["c20"];
     menuScene.start(gameFeatures);
-    menuScene.show("welcome");
+    menuScene.show(0);
     this.evtHandler.on(window.document, "keyup", (evt) => {
-      if (KeyName.ESC == evt.keyCode) {
+      if (KeyName.ESC == evt.keyCode && menuScene.active != 0) {
         if (this.gs.isOff) {
           this.gs.resume(gameFeatures);
           menuScene.clear();
           console.log("clearrr!!");
           return;
         }
-        console.log("pause!!");
-        menuScene.show("pause");
+        menuScene.show(1);
         this.gs.pause(gameFeatures);
       }
     });
   }
   update(gameFeatures: GameFeatures): void {
     if (this.gs.isOut) {
-      menuScene.show("lose");
-      //this.gs.restart(gameFeatures);
+      menuScene.show(2, this.gs.score);
+      menuScene.update(gameFeatures);
+      return;
     }
     this.gs.update(gameFeatures);
     menuScene.update(gameFeatures);

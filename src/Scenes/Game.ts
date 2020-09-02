@@ -10,6 +10,7 @@ export default class GameScene extends Layer {
   private bricks: LayerBricks = new LayerBricks();
   public isOff: boolean = false;
   public isOut: boolean = false;
+  public score: number = 0;
 
   start(gameFeatures: GameFeatures): void {
     this.box.start(gameFeatures);
@@ -25,6 +26,7 @@ export default class GameScene extends Layer {
     this.bricks.update(gameFeatures);
     if (this.box.y > gameFeatures.canvas.height) {
       this.isOut = true;
+      this.score = this.bricks.passed;
       //this.restart(gameFeatures);
     }
 
@@ -40,7 +42,7 @@ export default class GameScene extends Layer {
   }
 
   render(gameFeatures: GameFeatures): void {
-    if (this.isHidden || this.isOff || this.isOut) {
+    if (this.isOff || this.isOut) {
       return;
     }
     this.box.render(gameFeatures);
@@ -63,6 +65,8 @@ export default class GameScene extends Layer {
     this.box = new LayerBox();
     this.bricks = new LayerBricks();
     this.isOut = false;
+    this.score = 0;
+    this.bricks.passed = 0;
     this.start(gameFeatures);
     this.on(gameFeatures.canvas);
   }

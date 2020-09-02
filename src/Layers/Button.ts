@@ -10,7 +10,9 @@ export default class LayerButton extends Layer {
   label = <Layer>{};
   private eventHandler = new EventHandler();
   private events: any = {};
+  canvas: HTMLCanvasElement;
   start(gameFeatures: GameFeatures): void {
+    this.canvas = gameFeatures.canvas;
     if (!this.isHidden) {
       this.subscribe(gameFeatures.canvas);
     }
@@ -28,19 +30,18 @@ export default class LayerButton extends Layer {
     textFixture(this.label, gameFeatures);
   }
 
-  hide(canvas: HTMLCanvasElement) {
+  hide() {
     if (this.isHidden) {
       return;
     }
     this.isHidden = true;
-    this.unsubscribe(canvas);
-    return this;
+    this.off(this.canvas);
   }
 
-  show(canvas: HTMLCanvasElement) {
+  show() {
     if (this.isHidden) {
       this.isHidden = false;
-      this.subscribe(canvas);
+      this.subscribe(this.canvas);
     }
   }
 
@@ -76,8 +77,8 @@ export default class LayerButton extends Layer {
         _this.triggerEvent("mouseinside", this, [evt]);
       }
     };
-    eventList[`keydown.${this.id}`] = function (evt) {
-      _this.triggerEvent("keydown", this, [evt]);
+    eventList[`keyup.${this.id}`] = function (evt) {
+      _this.triggerEvent("keyup", this, [evt]);
       _this.triggerEvent("unpressed", this, [evt]);
     };
     for (var event in eventList) {
@@ -85,8 +86,8 @@ export default class LayerButton extends Layer {
     }
   }
 
-  private unsubscribe(canvas: HTMLCanvasElement) {
-    const names = ["mousedown", "mouseup", "click", "mousemove", "keydown"];
+  public off(canvas: HTMLCanvasElement) {
+    const names = ["mousedown", "mouseup", "click", "mousemove", "keyup"];
     names.forEach((name) => {
       this.eventHandler.off(document, `${name}.${this.id}`);
     });

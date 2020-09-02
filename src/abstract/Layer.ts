@@ -26,7 +26,7 @@ export default abstract class Layer {
   // rotation
   rotation?: number = 0;
   // font
-  font?: string = "20px arial, sans-serif";
+  font?: string;
   text?: string = "";
 
   //data shared

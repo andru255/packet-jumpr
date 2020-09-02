@@ -5,6 +5,7 @@ import LayerBrick from "./Brick";
 import { rectangleFixture } from "@toolbox/Fixture";
 
 export default class LayerBricks extends Layer {
+  public passed = 0;
   private bricks: LayerBrick[] = [];
   private numBricks = 4;
 
@@ -24,6 +25,7 @@ export default class LayerBricks extends Layer {
       if (brick.x + brick.width <= 0) {
         this.bricks.splice(index, 1);
         this.appendBrick(gameFeatures, this.bricks[this.bricks.length - 1]);
+        this.passed++;
       }
     });
   }

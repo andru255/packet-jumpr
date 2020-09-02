@@ -1,7 +1,6 @@
 import { KeyName } from "@toolbox/Keyboard";
 
 export interface MENU_COMP {
-  id: string;
   title: string;
   desc: string;
   opts: { l: string; k: KeyName }[];
@@ -9,8 +8,7 @@ export interface MENU_COMP {
 
 export const MENU_OPTS: MENU_COMP[] = [
   {
-    id: "welcome",
-    title: "Welcome to Run Packet! ruun!!",
+    title: "Welcome to Run Packet!",
     desc: "Use the mouse and click on the canvas",
     opts: [
       {
@@ -20,7 +18,6 @@ export const MENU_OPTS: MENU_COMP[] = [
     ],
   },
   {
-    id: "pause",
     title: "Take a breath!",
     desc: "",
     opts: [
@@ -35,9 +32,8 @@ export const MENU_OPTS: MENU_COMP[] = [
     ],
   },
   {
-    id: "lose",
     title: "Thanks for playing!",
-    desc: "Your packet jumps %N bricks! awesome :D",
+    desc: "",
     opts: [
       {
         l: "START AGAIN",
