@@ -7,10 +7,11 @@ import { isRectInsideOther, getMousePosition } from "@toolbox/MousePosition";
 export default class LayerButton extends Layer {
   id: string;
   isHidden: boolean = false;
-  label = <Layer>{};
+  label = <Layer>{ fillStyle: "#00416d", font: "30px Arial, sans-serif" };
   private eventHandler = new EventHandler();
   private events: any = {};
   canvas: HTMLCanvasElement;
+  fillStyle = "#f8bd7f";
   start(gameFeatures: GameFeatures): void {
     this.canvas = gameFeatures.canvas;
     if (!this.isHidden) {

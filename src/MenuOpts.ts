@@ -8,17 +8,17 @@ export interface MENU_COMP {
 
 export const MENU_OPTS: MENU_COMP[] = [
   {
-    title: "Welcome to Run Packet!",
+    title: "JUMP PACKET!",
     desc: "Use the mouse and click on the canvas",
     opts: [
       {
-        l: "START",
+        l: "START!",
         k: KeyName.ENTER,
       },
     ],
   },
   {
-    title: "Take a breath!",
+    title: "Take a Breath!",
     desc: "",
     opts: [
       {
@@ -32,11 +32,21 @@ export const MENU_OPTS: MENU_COMP[] = [
     ],
   },
   {
-    title: "Thanks for playing!",
+    title: "404",
     desc: "",
     opts: [
       {
-        l: "START AGAIN",
+        l: "PLAY AGAIN!",
+        k: KeyName.ENTER,
+      },
+    ],
+  },
+  {
+    title: "Sweet! You Win :D",
+    desc: "all set!",
+    opts: [
+      {
+        l: "PLAY AGAIN!",
         k: KeyName.ENTER,
       },
     ],

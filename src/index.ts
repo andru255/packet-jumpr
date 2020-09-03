@@ -24,17 +24,22 @@ class MainLayer extends Layer {
     };
     menuScene.cbs["ku10"] = menuScene.cbs["c10"];
     menuScene.cbs["c11"] = menuScene.cbs["c00"];
-    // start again
+    // 404
     menuScene.cbs["c20"] = menuScene.cbs["c10"];
     menuScene.cbs["ku20"] = menuScene.cbs["c20"];
+    // win
+    menuScene.cbs["c30"] = menuScene.cbs["c10"];
+    menuScene.cbs["ku30"] = menuScene.cbs["c10"];
     menuScene.start(gameFeatures);
     menuScene.show(0);
     this.evtHandler.on(window.document, "keyup", (evt) => {
-      if (KeyName.ESC == evt.keyCode && menuScene.active != 0) {
+      if (
+        KeyName.ESC == evt.keyCode &&
+        [0, 2].indexOf(menuScene.active) == -1
+      ) {
         if (this.gs.isOff) {
           this.gs.resume(gameFeatures);
           menuScene.clear();
-          console.log("clearrr!!");
           return;
         }
         menuScene.show(1);
@@ -43,6 +48,11 @@ class MainLayer extends Layer {
     });
   }
   update(gameFeatures: GameFeatures): void {
+    if (this.gs.won) {
+      menuScene.show(3);
+      menuScene.update(gameFeatures);
+      return;
+    }
     if (this.gs.isOut) {
       menuScene.show(2, this.gs.score);
       menuScene.update(gameFeatures);

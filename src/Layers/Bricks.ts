@@ -2,12 +2,12 @@ import Layer from "@abstract/Layer";
 import { GameFeatures } from "src/Game";
 import { Random } from "@toolbox/Math";
 import LayerBrick from "./Brick";
-import { rectangleFixture } from "@toolbox/Fixture";
-
 export default class LayerBricks extends Layer {
   public passed = 0;
+  public won: boolean = false;
   private bricks: LayerBrick[] = [];
   private numBricks = 4;
+  public url;
 
   start(gameFeatures: GameFeatures): void {
     this.width = gameFeatures.canvas.width;
@@ -19,14 +19,25 @@ export default class LayerBricks extends Layer {
   }
   update(gameFeatures: GameFeatures): void {
     this.x += this.vx;
+    if (this.passed == this.url.length) {
+      this.won = true;
+      return;
+    }
     this.bricks.forEach((brick, index) => {
       brick.vx = gameFeatures.dt * this.vx;
       brick.x += brick.vx;
       if (brick.x + brick.width <= 0) {
         this.bricks.splice(index, 1);
-        this.appendBrick(gameFeatures, this.bricks[this.bricks.length - 1]);
+        if (this.url[this.passed + this.numBricks] !== undefined) {
+          this.appendBrick(
+            gameFeatures,
+            this.bricks[this.bricks.length - 1],
+            this.url[this.passed + this.numBricks]
+          );
+        }
         this.passed++;
       }
+      brick.update(gameFeatures);
     });
   }
   render(gameFeatures: GameFeatures): void {
@@ -41,23 +52,24 @@ export default class LayerBricks extends Layer {
 
   private generateBricks(gameFeatures) {
     for (let i = 0; i < this.numBricks; i++) {
-      var brick = this.getNewBrick(gameFeatures);
+      var brick = this.getNewBrick(gameFeatures, undefined, this.url[i]);
       brick.x = 20;
       if (this.bricks.length > 0) {
         let lastBrick = this.bricks[i - 1];
-        brick = this.getNewBrick(gameFeatures, lastBrick);
+        brick = this.getNewBrick(gameFeatures, lastBrick, this.url[i]);
       }
       this.bricks.push(brick);
     }
   }
 
-  private appendBrick(gameFeatures: GameFeatures, lastBrick: Layer) {
-    this.bricks.push(this.getNewBrick(gameFeatures, lastBrick));
+  private appendBrick(gameFeatures: GameFeatures, lastBrick: Layer, t: string) {
+    this.bricks.push(this.getNewBrick(gameFeatures, lastBrick, t));
   }
 
   private getNewBrick(
     gameFeatures: GameFeatures,
-    lastBrick?: Layer
+    lastBrick?: Layer,
+    t?: string
   ): LayerBrick {
     let brick = new LayerBrick();
     brick.width = Random.fromArray([40, 60]);
@@ -65,6 +77,8 @@ export default class LayerBricks extends Layer {
     if (lastBrick) {
       brick.x = lastBrick.x + lastBrick.width + Random.int(200, 280);
     }
+    brick.label.text = t;
+    brick.start(gameFeatures);
     return brick;
   }
 }

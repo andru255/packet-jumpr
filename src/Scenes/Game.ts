@@ -11,8 +11,11 @@ export default class GameScene extends Layer {
   public isOff: boolean = false;
   public isOut: boolean = false;
   public score: number = 0;
+  public won: boolean = false;
+  public url = ["123", "456"];
 
   start(gameFeatures: GameFeatures): void {
+    this.bricks.url = this.url;
     this.box.start(gameFeatures);
     this.bricks.start(gameFeatures);
     this.off(gameFeatures.canvas);
@@ -24,10 +27,10 @@ export default class GameScene extends Layer {
     }
     this.box.update(gameFeatures);
     this.bricks.update(gameFeatures);
+
     if (this.box.y > gameFeatures.canvas.height) {
+      this.won = this.bricks.won;
       this.isOut = true;
-      this.score = this.bricks.passed;
-      //this.restart(gameFeatures);
     }
 
     if (!this.isPressed) {
@@ -65,6 +68,8 @@ export default class GameScene extends Layer {
     this.box = new LayerBox();
     this.bricks = new LayerBricks();
     this.isOut = false;
+    this.isOff = false;
+    this.won = false;
     this.score = 0;
     this.bricks.passed = 0;
     this.start(gameFeatures);
@@ -90,6 +95,10 @@ export default class GameScene extends Layer {
     if (brickTouched) {
       this.box.y = brickTouched.y - (this.box.height + this.box.lineWidth);
       this.box.vy *= this.box.bounce;
+      brickTouched.fillStyle = "#0dfff0";
+      if (this.url.length == this.bricks.passed + 1) {
+        this.won = true;
+      }
     }
   }
 }
