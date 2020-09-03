@@ -12,10 +12,10 @@ export default class GameScene extends Layer {
   public isOut: boolean = false;
   public score: number = 0;
   public won: boolean = false;
-  public url = ["123", "456"];
+  public ls = ["localhost", "localhost2"];
 
   start(gameFeatures: GameFeatures): void {
-    this.bricks.url = this.url;
+    this.bricks.ls = this.ls;
     this.box.start(gameFeatures);
     this.bricks.start(gameFeatures);
     this.off(gameFeatures.canvas);
@@ -55,7 +55,6 @@ export default class GameScene extends Layer {
   pause(gameFeatures: GameFeatures) {
     this.isOff = true;
     this.off(gameFeatures.canvas);
-    //gameFeatures.off();
   }
 
   resume(gameFeatures: GameFeatures) {
@@ -96,7 +95,7 @@ export default class GameScene extends Layer {
       this.box.y = brickTouched.y - (this.box.height + this.box.lineWidth);
       this.box.vy *= this.box.bounce;
       brickTouched.fillStyle = "#0dfff0";
-      if (this.url.length == this.bricks.passed + 1) {
+      if (this.bricks.gtLsLength() == this.bricks.totalp + 1) {
         this.won = true;
       }
     }

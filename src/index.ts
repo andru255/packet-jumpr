@@ -4,10 +4,13 @@ import Layer from "@abstract/Layer";
 import { KeyName } from "@toolbox/Keyboard";
 import EventHandler from "@toolbox/EventHandler";
 import GameScene from "./Scenes/Game";
+import NavBarScene from "./Scenes/NavBar";
 
 class MainLayer extends Layer {
   private evtHandler = new EventHandler();
   private gs = new GameScene();
+  private v = new NavBarScene();
+
   start(gameFeatures: GameFeatures): void {
     this.gs.start(gameFeatures);
     //menu events
@@ -46,7 +49,13 @@ class MainLayer extends Layer {
         this.gs.pause(gameFeatures);
       }
     });
+    // score in navbar
+    this.v.url.text = "http://google.com";
+    this.v.bricks.text = "Bricks: -- / --";
+    this.v.urls.text = "URLs: --";
+    this.v.start(gameFeatures);
   }
+
   update(gameFeatures: GameFeatures): void {
     if (this.gs.won) {
       menuScene.show(3);
@@ -64,6 +73,7 @@ class MainLayer extends Layer {
   render(gameFeatures: GameFeatures): void {
     this.gs.render(gameFeatures);
     menuScene.render(gameFeatures);
+    this.v.render(gameFeatures);
   }
 }
 

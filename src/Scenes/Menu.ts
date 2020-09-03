@@ -14,7 +14,8 @@ class MenuScene extends Layer {
 
   start(gameFeatures: GameFeatures): void {
     this.width = gameFeatures.canvas.width;
-    this.height = gameFeatures.canvas.height;
+    this.height = gameFeatures.canvas.height - 50;
+    this.y = 80;
     this.fillStyle = "#ffffffcc";
     this.comps = MENU_OPTS.map((op, i) => {
       const title = <Layer>{ text: op.title };

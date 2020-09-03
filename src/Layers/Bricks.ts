@@ -4,10 +4,12 @@ import { Random } from "@toolbox/Math";
 import LayerBrick from "./Brick";
 export default class LayerBricks extends Layer {
   public passed = 0;
+  public lpassed = 0;
+  public totalp = 0;
   public won: boolean = false;
   private bricks: LayerBrick[] = [];
   private numBricks = 4;
-  public url;
+  public ls: string[];
 
   start(gameFeatures: GameFeatures): void {
     this.width = gameFeatures.canvas.width;
@@ -17,25 +19,38 @@ export default class LayerBricks extends Layer {
     this.lineWidth = 1;
     this.generateBricks(gameFeatures);
   }
+
   update(gameFeatures: GameFeatures): void {
     this.x += this.vx;
-    if (this.passed == this.url.length) {
+    if (this.totalp == this.gtLsLength()) {
       this.won = true;
       return;
     }
+
     this.bricks.forEach((brick, index) => {
       brick.vx = gameFeatures.dt * this.vx;
       brick.x += brick.vx;
       if (brick.x + brick.width <= 0) {
         this.bricks.splice(index, 1);
-        if (this.url[this.passed + this.numBricks] !== undefined) {
+        var next = this.passed + (this.lpassed == 0 ? this.numBricks : 0);
+        if (this.ls[this.lpassed].length == next) {
+          if (this.gtLsLength() - (this.totalp + this.numBricks) > 1) {
+            next = 0;
+            this.passed = 0;
+            this.lpassed++;
+          }
+        }
+        if (this.ls[this.lpassed][next] !== undefined) {
           this.appendBrick(
             gameFeatures,
             this.bricks[this.bricks.length - 1],
-            this.url[this.passed + this.numBricks]
+            this.ls[this.lpassed][next]
           );
         }
         this.passed++;
+        this.totalp++;
+        console.log("lpassed", this.lpassed);
+        console.log("next", next);
       }
       brick.update(gameFeatures);
     });
@@ -52,11 +67,19 @@ export default class LayerBricks extends Layer {
 
   private generateBricks(gameFeatures) {
     for (let i = 0; i < this.numBricks; i++) {
-      var brick = this.getNewBrick(gameFeatures, undefined, this.url[i]);
+      var brick = this.getNewBrick(
+        gameFeatures,
+        undefined,
+        this.ls[this.lpassed][i]
+      );
       brick.x = 20;
       if (this.bricks.length > 0) {
         let lastBrick = this.bricks[i - 1];
-        brick = this.getNewBrick(gameFeatures, lastBrick, this.url[i]);
+        brick = this.getNewBrick(
+          gameFeatures,
+          lastBrick,
+          this.ls[this.lpassed][i]
+        );
       }
       this.bricks.push(brick);
     }
@@ -80,5 +103,9 @@ export default class LayerBricks extends Layer {
     brick.label.text = t;
     brick.start(gameFeatures);
     return brick;
+  }
+
+  public gtLsLength(): number {
+    return this.ls.reduce((x, l) => x + l.length, 0);
   }
 }
