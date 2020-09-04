@@ -13,8 +13,8 @@ export default class LayerBrick extends Layer {
   label = <Layer>{ fillStyle: "#00416d", font: "30px Arial, sans-serif" };
   start(gameFeatures: GameFeatures): void {}
   update(gameFeatures: GameFeatures): void {
-    this.label.x = this.x;
-    this.label.y = this.y + 30;
+    this.label.x = this.x + 10;
+    this.label.y = this.y + 25;
     this.label.width = this.width;
     this.label.height = this.height;
   }

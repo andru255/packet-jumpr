@@ -4,15 +4,15 @@ import LayerBox from "src/Layers/Box";
 import LayerBricks from "src/Layers/Bricks";
 import EventHandler from "@toolbox/EventHandler";
 export default class GameScene extends Layer {
-  private isPressed: boolean = false;
+  public isPressed: boolean = false;
   private evtHandler = new EventHandler();
   private box: LayerBox = new LayerBox();
   private bricks: LayerBricks = new LayerBricks();
   public isOff: boolean = false;
   public isOut: boolean = false;
-  public score: number = 0;
   public won: boolean = false;
-  public ls = ["localhost", "localhost2"];
+  public ls = [];
+  public d = [0, 0, 0];
 
   start(gameFeatures: GameFeatures): void {
     this.bricks.ls = this.ls;
@@ -22,6 +22,7 @@ export default class GameScene extends Layer {
   }
 
   update(gameFeatures: GameFeatures): void {
+    this.d = this.bricks.d;
     if (this.isOff) {
       return;
     }
@@ -69,8 +70,7 @@ export default class GameScene extends Layer {
     this.isOut = false;
     this.isOff = false;
     this.won = false;
-    this.score = 0;
-    this.bricks.passed = 0;
+    this.bricks.d[2] = 0;
     this.start(gameFeatures);
     this.on(gameFeatures.canvas);
   }
@@ -95,7 +95,7 @@ export default class GameScene extends Layer {
       this.box.y = brickTouched.y - (this.box.height + this.box.lineWidth);
       this.box.vy *= this.box.bounce;
       brickTouched.fillStyle = "#0dfff0";
-      if (this.bricks.gtLsLength() == this.bricks.totalp + 1) {
+      if (this.bricks.ll == this.bricks.d[2] + 1) {
         this.won = true;
       }
     }

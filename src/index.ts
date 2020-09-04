@@ -5,14 +5,22 @@ import { KeyName } from "@toolbox/Keyboard";
 import EventHandler from "@toolbox/EventHandler";
 import GameScene from "./Scenes/Game";
 import NavBarScene from "./Scenes/NavBar";
+import gen from "./URLGen";
+import { Random } from "@toolbox/Math";
 
 class MainLayer extends Layer {
   private evtHandler = new EventHandler();
   private gs = new GameScene();
   private v = new NavBarScene();
+  private bsc: string;
+  private ksc = "jlp";
 
   start(gameFeatures: GameFeatures): void {
+    // game
+    this.gs.ls = gen(Random.int(10, 20));
     this.gs.start(gameFeatures);
+    // score in navbar
+    this.v.start(gameFeatures);
     //menu events
     //welcome
     menuScene.cbs["c00"] = () => {
@@ -49,24 +57,34 @@ class MainLayer extends Layer {
         this.gs.pause(gameFeatures);
       }
     });
-    // score in navbar
-    this.v.url.text = "http://google.com";
-    this.v.bricks.text = "Bricks: -- / --";
-    this.v.urls.text = "URLs: --";
-    this.v.start(gameFeatures);
   }
 
   update(gameFeatures: GameFeatures): void {
+    this.v.v = [this.gs.ls[this.gs.d[3]], this.gs.d[2], this.gs.d[3]];
+    if (this.gs.isPressed) {
+      this.v.v[3] = "😮";
+      this.v.update(gameFeatures);
+    }
     if (this.gs.won) {
-      menuScene.show(3);
+      this.v.v = [
+        this.gs.ls[this.gs.d[3]],
+        this.gs.d[2] + 1,
+        this.gs.d[3] + 1,
+        "🤩",
+      ];
+      this.v.update(gameFeatures);
+      menuScene.show(3, this.recMRAndResult());
       menuScene.update(gameFeatures);
       return;
     }
     if (this.gs.isOut) {
-      menuScene.show(2, this.gs.score);
+      this.v.v[3] = "😵";
+      this.v.update(gameFeatures);
+      menuScene.show(2, this.recMRAndResult());
       menuScene.update(gameFeatures);
       return;
     }
+    this.v.update(gameFeatures);
     this.gs.update(gameFeatures);
     menuScene.update(gameFeatures);
   }
@@ -74,6 +92,24 @@ class MainLayer extends Layer {
     this.gs.render(gameFeatures);
     menuScene.render(gameFeatures);
     this.v.render(gameFeatures);
+  }
+
+  recMRAndResult() {
+    this.bsc =
+      localStorage.getItem(this.ksc) == null
+        ? "[0,0]"
+        : localStorage.getItem(this.ksc);
+    const lastData = JSON.parse(this.bsc);
+    if (this.gs.d[2] > lastData[0]) {
+      localStorage.setItem(
+        this.ksc,
+        JSON.stringify([this.gs.d[2], this.gs.d[3]])
+      );
+    }
+    if (lastData[0] > this.gs.d[2]) {
+      return [lastData[0], lastData[1]];
+    }
+    return [this.gs.d[2], this.gs.d[3]];
   }
 }
 

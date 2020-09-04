@@ -2,8 +2,7 @@ import Layer from "@abstract/Layer";
 import { GameFeatures } from "src/Game";
 import { rectangleFixture, textFixture } from "@toolbox/Fixture";
 import LayerButton from "src/Layers/Button";
-import { KeyName } from "@toolbox/Keyboard";
-import { MENU_OPTS, MENU_COMP } from "src/MenuOpts";
+import { MENU_OPTS } from "src/MenuOpts";
 
 class MenuScene extends Layer {
   startBtn = new LayerButton();
@@ -34,14 +33,13 @@ class MenuScene extends Layer {
         btn.x = this.width / 2 - btn.width / 2;
         btn.y = this.height / 2 + 80 * (x + 1);
         btn.label.y = 10 + btn.y + btn.height / 2;
-        btn.label.x = btn.x + btn.width / 2 - 50;
+        btn.label.width = item.w;
+        btn.label.x = btn.x + item.w / 2;
         btn.label.text = item.l;
         if (this.cbs[`c${btn.id}`] !== undefined) {
-          console.log("click", `c${btn.id}`);
           btn.on("click", this.cbs[`c${btn.id}`]);
         }
         if (this.cbs[`ku${btn.id}`] !== undefined) {
-          console.log("keyup", `ku${btn.id}`);
           btn.on("keyup", (evt) => {
             if (item.k == evt.keyCode) {
               this.cbs[`ku${btn.id}`](evt);
@@ -80,9 +78,9 @@ class MenuScene extends Layer {
     this.getComp().btns.forEach((btn) => btn.render(gameFeatures));
   }
 
-  show(type: any, sc?: number): void {
-    if (sc > 0) {
-      this.comps[2].desc.text = `Scored: ${sc} bricks`;
+  show(type: any, sc = []): void {
+    if (sc.length > 0) {
+      this.comps[2].desc.text = `Max Scored: ${sc[0]} bricks & ${sc[1]} URLs`;
     }
     this.active = type;
     this.isHidden = false;
