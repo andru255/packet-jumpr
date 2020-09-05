@@ -24,7 +24,10 @@ export function textFixture(layer: Layer, gf: any) {
   ctx.strokeStyle = layer.strokeStyle;
   ctx.fillStyle = layer.fillStyle;
   ctx.fillText(layer.text, layer.x, layer.y);
-  ctx.stroke();
-  ctx.fill();
+  if (layer.strokeStyle) {
+    ctx.lineWidth = layer.lineWidth;
+    ctx.strokeStyle = layer.strokeStyle;
+    ctx.strokeText(layer.text, layer.x, layer.y);
+  }
   ctx.restore();
 }

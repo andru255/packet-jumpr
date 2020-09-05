@@ -10,6 +10,7 @@ class MenuScene extends Layer {
   comps: { title: Layer; desc: Layer; btns?: LayerButton[] }[] = [];
   active: number;
   cbs = {};
+  scLs: Layer[] = [];
 
   start(gameFeatures: GameFeatures): void {
     this.width = gameFeatures.canvas.width;
@@ -19,11 +20,17 @@ class MenuScene extends Layer {
     this.comps = MENU_OPTS.map((op, i) => {
       const title = <Layer>{ text: op.title };
       title.y = this.height / 2 - 100;
-      title.x = this.width / 2 - 180;
+      title.x = this.width / 2 + op.ml;
       title.font = "50px Arial, sans-serif";
+      if (i == 2) {
+        title.font = "60px Arial, sans-serif";
+        title.fillStyle = "#F03A17";
+        title.strokeStyle = "#000";
+        title.lineWidth = 2;
+      }
       const desc = <Layer>{ text: op.desc };
       desc.y = title.y + 60;
-      desc.x = title.x - 180;
+      desc.x = this.width / 2 + op.mml;
       desc.font = "40px Arial, sans-serif";
       const btns = op.opts.map((item, x) => {
         const btn = new LayerButton();
@@ -32,10 +39,10 @@ class MenuScene extends Layer {
         btn.height = 60;
         btn.x = this.width / 2 - btn.width / 2;
         btn.y = this.height / 2 + 80 * (x + 1);
+        btn.label.text = `${item.l}`;
         btn.label.y = 10 + btn.y + btn.height / 2;
         btn.label.width = item.w;
         btn.label.x = btn.x + item.w / 2;
-        btn.label.text = item.l;
         if (this.cbs[`c${btn.id}`] !== undefined) {
           btn.on("click", this.cbs[`c${btn.id}`]);
         }
@@ -64,7 +71,6 @@ class MenuScene extends Layer {
       });
       return;
     }
-    //this.startBtn.show(gameFeatures.canvas);
     this.getComp().btns.forEach((btn) => btn.show());
   }
 
@@ -75,12 +81,22 @@ class MenuScene extends Layer {
     rectangleFixture(this, gameFeatures);
     textFixture(this.getComp().title, gameFeatures);
     textFixture(this.getComp().desc, gameFeatures);
+    this.scLs.forEach((l) => textFixture(l, gameFeatures));
     this.getComp().btns.forEach((btn) => btn.render(gameFeatures));
   }
 
   show(type: any, sc = []): void {
     if (sc.length > 0) {
-      this.comps[2].desc.text = `Max Scored: ${sc[0]} bricks & ${sc[1]} URLs`;
+      this.scLs = sc.map((v, i) => {
+        var l = <Layer>{};
+        this.fillStyle = "#ffffffcc";
+        l.font = "40px Arial, sans-serif";
+        l.x = this.width / 2 - 100;
+        l.y = this.height / 2 + 50 * (i + 1) - 40;
+        const pr = ["Bricks", "URLs"];
+        l.text = `${pr[i]} : ${v}`;
+        return l;
+      });
     }
     this.active = type;
     this.isHidden = false;

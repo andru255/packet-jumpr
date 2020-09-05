@@ -4,7 +4,6 @@ export interface GameFeatures {
   dt: number;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  name: string;
   on: () => void;
   off: () => void;
 }
@@ -55,7 +54,6 @@ export class Game {
       dt: this.step,
       canvas: this.canvas,
       ctx: this.ctx,
-      name: "RUN LITTLE PACKET!!",
       on: () => this.on(),
       off: () => this.off(),
     };

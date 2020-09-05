@@ -32,7 +32,7 @@ export default abstract class Layer {
   //data shared
   shared?: any = {};
   // visibility
-  isHidden: boolean = false;
+  isHidden?: boolean = false;
 
   abstract start?(gameFeatures: GameFeatures): void;
   abstract update?(gameFeatures: GameFeatures): void;
