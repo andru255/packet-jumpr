@@ -86,6 +86,7 @@ class MenuScene extends Layer {
   }
 
   show(type: any, sc = []): void {
+    this.scLs = [];
     if (sc.length > 0) {
       this.scLs = sc.map((v, i) => {
         var l = <Layer>{};

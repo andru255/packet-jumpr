@@ -17,7 +17,7 @@ class MainLayer extends Layer {
 
   start(gameFeatures: GameFeatures): void {
     // game
-    this.gs.ls = gen(Random.int(10, 20));
+    this.gs.ls = gen(Random.int(5, 10));
     this.gs.start(gameFeatures);
     // score in navbar
     this.v.start(gameFeatures);
@@ -73,7 +73,7 @@ class MainLayer extends Layer {
         "🤩",
       ];
       this.v.update(gameFeatures);
-      menuScene.show(3, this.recMRAndResult());
+      menuScene.show(3);
       menuScene.update(gameFeatures);
       return;
     }

@@ -17,7 +17,7 @@ export const MENU_OPTS: MENU_COMP[] = [
     mml: -340,
     opts: [
       {
-        l: "START!",
+        l: "START",
         k: KeyName.ENTER,
         w: 180,
       },
@@ -50,7 +50,7 @@ export const MENU_OPTS: MENU_COMP[] = [
     mml: -110,
     opts: [
       {
-        l: "PLAY AGAIN!",
+        l: "PLAY AGAIN",
         k: KeyName.ENTER,
         w: 100,
       },

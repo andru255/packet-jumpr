@@ -3,6 +3,7 @@ import { GameFeatures } from "src/Game";
 import LayerBox from "src/Layers/Box";
 import LayerBricks from "src/Layers/Bricks";
 import EventHandler from "@toolbox/EventHandler";
+import { KeyName } from "@toolbox/Keyboard";
 export default class GameScene extends Layer {
   public isPressed: boolean = false;
   private evtHandler = new EventHandler();
@@ -82,11 +83,23 @@ export default class GameScene extends Layer {
     this.evtHandler.on(canvas, "mouseup", () => {
       this.isPressed = false;
     });
+    this.evtHandler.on(document, "keydown", (evt) => {
+      if (evt.keyCode == KeyName.SBAR) {
+        this.isPressed = true;
+      }
+    });
+    this.evtHandler.on(document, "keyup", (evt) => {
+      if (evt.keyCode == KeyName.SBAR) {
+        this.isPressed = false;
+      }
+    });
   }
 
   private off(canvas: HTMLCanvasElement) {
     this.evtHandler.off(canvas, "mousedown");
     this.evtHandler.off(canvas, "mouseup");
+    this.evtHandler.off(document, "keydown");
+    this.evtHandler.off(document, "keyup");
   }
 
   private bounceBox() {
