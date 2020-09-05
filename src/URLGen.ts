@@ -3,13 +3,13 @@ import { Random } from "@toolbox/Math";
 const gen = (t: number): string[] => {
   var res = [];
   const dom = [
-    "timez",
-    "js13kgmes",
-    "jiggle",
-    "rocks",
-    "hard",
-    "playgrund",
-    "lorem",
+    "abazio",
+    "yaloo",
+    "waytags",
+    "linkverse",
+    "jumppulse",
+    "quifi",
+    "tweetpulse",
   ];
   const ext = ["com", "gov", "org"];
   for (var i = 0; i < t; i++) {
